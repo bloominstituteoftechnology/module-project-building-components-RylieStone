@@ -3,8 +3,15 @@ function moduleProject3() {
   // 👉 TASK 1 - Write a `buildNav` component that returns a nav
 
   function buildNav(links) {
-    //  ✨ do your magic here
-    return document.createElement('nav')
+    let nav = document.createElement('nav')
+    links.forEach(link => {
+      const navelem = document.createElement("a")
+      navelem.href = link.href
+      navelem.textContent = link.textContent
+      navelem.title = links.title
+      nav.appendChild(navelem)
+    })
+    return nav
   }
 
   // ❗ DOM creation using your `buildNav` component (do not change):
@@ -19,7 +26,26 @@ function moduleProject3() {
   // 👉 TASK 2A - Write a `buildLearnerCard` component that returns a card
 
   function buildLearnerCard(learner, languages) {
-    //  ✨ do your magic here
+    let elem = document.createElement("div")
+    elem.classList.add("learner-card")
+    let favLanguage = languages.filter(language => language.id === learner.favLanguage)
+
+    let nameElem = document.createElement("p")
+    nameElem.textContent = learner.fullName
+    elem.appendChild(nameElem)
+
+    let learnerIDElem = document.createElement("p")
+    learnerIDElem.textContent = `Learner ID: ${learner.id}`
+    elem.appendChild(learnerIDElem)
+
+    let dateElem = document.createElement("p")
+    dateElem.textContent = `Date of Birth: ${learner.dateOfBirth}`
+    elem.appendChild(dateElem)
+
+    let favLanElem = document.createElement("p")
+    favLanElem.textContent = `Favorite Language: ${favLanguage[0].name}`
+    elem.appendChild(favLanElem)
+    return elem
   }
 
   {
@@ -39,16 +65,53 @@ function moduleProject3() {
       { id: 41, fullName: 'Sabah Beydoun', dateOfBirth: '1988-03-25', favLanguage: 91 },
       { id: 17, fullName: 'Daniel Castillo', dateOfBirth: '1995-11-05', favLanguage: 12 }
     ]
-    //  ✨ do your magic here
+    learners.forEach(learner => {
+      document.querySelector("section").appendChild(buildLearnerCard(learner, languages))
+    })
   }
 
   // 👉 TASK 3 - Write a `buildFooter` component that returns a footer
 
   function buildFooter(footerData) {
-    //  ✨ do your magic here
-    return document.createElement('footer')
-  }
+    const footer = document.createElement('footer')
+    const cominfo = document.createElement("div")
+    cominfo.classList.add("company-info")
+    const social = document.createElement("div")
+    social.classList.add("social-media")
+    const endfoot = document.createElement("div")
 
+    let comname = document.createElement("p")
+    comname.textContent = footerData.companyName
+    comname.classList.add("company-name")
+    cominfo.appendChild(comname)
+
+    let address = document.createElement("p")
+    address.textContent = footerData.address
+    address.classList.add("address")
+    cominfo.appendChild(address)
+
+    let contact = document.createElement("p")
+    let link = document.createElement("a")
+    link.href = "mailto:info@example.com"
+    link.textContent = "info@example.com"
+    contact.textContent = `Email: `
+    contact.appendChild(link)
+    contact.classList.add("contact-email")
+    cominfo.appendChild(contact)
+    
+    for (let [key, value] of Object.entries(footerData.socialMedia)) {
+      let socialL = document.createElement("a")
+      socialL.href = value
+      socialL.textContent = key
+      social.appendChild(socialL)
+    }
+
+    endfoot.textContent = `© BLOOM INSTITUTE OF TECHNOLOGY 2023`
+    footer.appendChild(cominfo)
+    footer.appendChild(social)
+    footer.appendChild(endfoot)
+    return footer
+  }
   // ❗ DOM creation using your `buildFooter` component (do not change):
   document.body.appendChild(buildFooter({
     companyName: 'Bloom Institute of Technology',
@@ -62,7 +125,13 @@ function moduleProject3() {
   }))
 
   // 👉 TASK 4 - Clicking on the section should deactivate the active card
-
+  document.querySelector("section").addEventListener("click", (evt) => {
+    const allLearnCards = document.querySelectorAll(".learner-card")
+    allLearnCards.forEach(card => card.classList.remove('active'))
+    if (evt.target !== document.querySelector("section")) {
+      evt.target.closest('.learner-card').classList.add("active")
+    }
+  })
   //  ✨ do your magic here
 }
 
